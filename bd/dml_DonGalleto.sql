@@ -1,3 +1,5 @@
+use don_galleto;
+
 INSERT INTO recipes (name, yield, instructions)
 VALUES 
 ('Sorpresa Nuez Don Galleto', 750, '1) Tamiza la harina con sal y polvo para hornear. 2) Bate la mantequilla con azúcar hasta que quede cremoso. 3) Incorpora leche y vainilla. 4) Agrega nueces y forma bolitas. 5) Hornea.'),
