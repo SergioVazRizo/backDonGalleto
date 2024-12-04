@@ -64,62 +64,58 @@ public class DaoCookie {
     }
 
     public Cookie updateStock(int id, int quantity) throws SQLException, ClassNotFoundException, IOException {
-        Cookie cookie = null;
-        ConexionMySQL connMysql = new ConexionMySQL();
-        String updateQuery = "UPDATE cookies SET stock = stock + ? WHERE id = ?";
-        String selectQuery = "SELECT * FROM cookies WHERE id = ?";
-        Connection conn = connMysql.abrirConexion();
+    Cookie cookie = null;
+    ConexionMySQL connMysql = new ConexionMySQL();
+    String updateQuery = "UPDATE cookies SET stock = stock + ? WHERE id = ? AND (stock + ?) >= 0"; // Aseguramos que no quede negativo.
+    String selectQuery = "SELECT * FROM cookies WHERE id = ?";
+    Connection conn = connMysql.abrirConexion();
 
-        try {
-            conn.setAutoCommit(false);
-            PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
-            updateStmt.setInt(1, quantity); 
-            updateStmt.setInt(2, id);  
-            int rowsUpdated = updateStmt.executeUpdate();
-            updateStmt.close();
+    try {
+        conn.setAutoCommit(false);
+        PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
+        updateStmt.setInt(1, quantity); 
+        updateStmt.setInt(2, id);  
+        updateStmt.setInt(3, quantity); // Verificación para evitar stock negativo
+        int rowsUpdated = updateStmt.executeUpdate();
+        updateStmt.close();
 
-            if (rowsUpdated == 0) {
-                
-                throw new SQLException("No se encontró la cookie con ID " + id);
-            }
-
-           
-            PreparedStatement selectStmt = conn.prepareStatement(selectQuery);
-            selectStmt.setInt(1, id);
-            ResultSet rs = selectStmt.executeQuery();
-
-            if (rs.next()) {
-                cookie = new Cookie();
-                cookie.setId(rs.getInt("id"));
-                cookie.setName(rs.getString("name"));
-                cookie.setRecipeId(rs.getInt("recipe_Id"));
-                cookie.setDescription(rs.getString("description"));
-                cookie.setStatus(rs.getString("status"));
-                cookie.setUnitPrice(rs.getDouble("unit_Price"));
-                cookie.setPackage500gPrice(rs.getDouble("package_500g_price"));
-                cookie.setPackage1000gPrice(rs.getDouble("package_1000g_price"));
-                cookie.setPricePerGram(rs.getDouble("price_per_gram"));
-                cookie.setStock(rs.getInt("stock"));
-                cookie.setWeightPerUnit(rs.getDouble("weight_per_unit"));
-            }
-            rs.close();
-            selectStmt.close();
-
-            // 7. Confirmar la transacción
-            conn.commit();
-        } catch (Exception e) {
-            // 8. Si algo falla, revertir la transacción
-            conn.rollback();
-            throw e;
-        } finally {
-            // 9. Cerrar la conexión y restaurar el modo auto-commit
-            conn.setAutoCommit(true);
-            connMysql.cerrarConexion(conn);
+        if (rowsUpdated == 0) {
+            throw new SQLException("No se pudo actualizar el stock. Puede que la cookie no exista o el stock sea insuficiente.");
         }
 
-        // 10. Retornar la cookie actualizada
-        return cookie;
+        PreparedStatement selectStmt = conn.prepareStatement(selectQuery);
+        selectStmt.setInt(1, id);
+        ResultSet rs = selectStmt.executeQuery();
+
+        if (rs.next()) {
+            cookie = new Cookie();
+            cookie.setId(rs.getInt("id"));
+            cookie.setName(rs.getString("name"));
+            cookie.setRecipeId(rs.getInt("recipe_Id"));
+            cookie.setDescription(rs.getString("description"));
+            cookie.setStatus(rs.getString("status"));
+            cookie.setUnitPrice(rs.getDouble("unit_Price"));
+            cookie.setPackage500gPrice(rs.getDouble("package_500g_price"));
+            cookie.setPackage1000gPrice(rs.getDouble("package_1000g_price"));
+            cookie.setPricePerGram(rs.getDouble("price_per_gram"));
+            cookie.setStock(rs.getInt("stock"));
+            cookie.setWeightPerUnit(rs.getDouble("weight_per_unit"));
+        }
+        rs.close();
+        selectStmt.close();
+
+        conn.commit();
+    } catch (Exception e) {
+        conn.rollback();
+        throw e;
+    } finally {
+        conn.setAutoCommit(true);
+        connMysql.cerrarConexion(conn);
     }
+
+    return cookie;
+}
+
     
       public Cookie updateStatus(int id, String status) throws SQLException, ClassNotFoundException, IOException {
         Cookie cookie = null;

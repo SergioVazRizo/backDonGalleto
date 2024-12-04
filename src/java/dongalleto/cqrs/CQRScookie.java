@@ -22,14 +22,12 @@ public class CQRScookie {
     }
 
     public String validarCookie(int id, int quantity) {
-        if (id <= 0) {
-            return "El ID de la cookie debe ser un valor positivo.";
-        }
-        if (quantity < 0) {
-            return "La cantidad de stock no puede ser negativa.";
-        }
-        return "Todo correcto insercion exitosa";
+    if (id <= 0) {
+        return "El ID de la cookie debe ser un valor positivo.";
     }
+    // Permitimos valores negativos en la cantidad.
+    return "Todo correcto insercion exitosa";
+}
 
   
     public Cookie updateStatus(int id, String status) throws SQLException, ClassNotFoundException, IOException {
