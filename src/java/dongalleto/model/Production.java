@@ -6,17 +6,26 @@ public class Production {
     private int cookieId;
     private String productionStatus; 
     private int unitsProduced;
+    private int newStock;
 
-    public Production(int id, int cookieId, String productionStatus, int unitsProduced) {
+    public Production(int id, int cookieId, String productionStatus, int unitsProduced, int newStock) {
         this.id = id;
         this.cookieId = cookieId;
         this.productionStatus = productionStatus;
         this.unitsProduced = unitsProduced;
-    }
+        this.newStock = newStock;
+    } 
 
     public Production() {
     }
 
+    public int getNewStock() {
+        return newStock;
+    }
+
+    public void setNewStock(int newStock) {
+        this.newStock = newStock;
+    }
     public int getId() {
         return id;
     }
@@ -57,6 +66,7 @@ public class Production {
         sb.append(", cookieId:").append(cookieId);
         sb.append(", productionStatus:").append(productionStatus);
         sb.append(", unitsProduced:").append(unitsProduced);
+        sb.append(", newStock:").append(newStock);
         sb.append('}');
         return sb.toString();
     }
