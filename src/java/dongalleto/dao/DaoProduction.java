@@ -82,6 +82,7 @@ public class DaoProduction {
         return null;
     }
 
+<<<<<<< HEAD
     public Production completeProduction(int cookieId) throws SQLException, ClassNotFoundException, IOException {
         // Obtener la producción pendiente por cookieId
         Production production = getProductionByCookieId(cookieId);
@@ -180,6 +181,34 @@ public class DaoProduction {
 
         // Devolver el ID generado
         return generatedId;
+=======
+    // Modificar el método completeProduction para incluir la actualización de stock
+    public Production completeProduction(int cookieId) throws SQLException, ClassNotFoundException, IOException {
+        Production production = getProductionByCookieId(cookieId);
+        if (production != null) {
+            // Aquí deberías implementar la lógica para actualizar el stock
+            // Este es un ejemplo simplificado, deberás adaptarlo a tu modelo de negocio
+            int newStock = production.getUnitsProduced(); // Ejemplo de cómo podría incrementarse el stock
+
+            // Actualizar el estado a completado
+            String updateQuery = "UPDATE production SET production_status = 'completada' WHERE cookie_id = ?";
+            ConexionMySQL connMySQL = new ConexionMySQL();
+            Connection conn = connMySQL.abrirConexion();
+
+            try {
+                PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
+                updateStmt.setInt(1, cookieId);
+                updateStmt.executeUpdate();
+
+                // Añadir un campo temporal para el nuevo stock (si es necesario en tu modelo)
+                production.setNewStock(newStock);
+                production.setProductionStatus("completada");
+            } finally {
+                connMySQL.cerrarConexion(conn);
+            }
+        }
+        return production;
+>>>>>>> 10c5db2ac9177f958ccd39203289b093f15fe90d
     }
 
 }

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 package dongalleto.Controller;
+=======
+package dongalleto.controller;
+>>>>>>> 10c5db2ac9177f958ccd39203289b093f15fe90d
 
 import dongalleto.dao.DaoProduction;
 import dongalleto.model.Production;
@@ -29,8 +33,11 @@ public class ControllerProduction {
     public Production completeProduction(int cookieId) throws SQLException, ClassNotFoundException, IOException {
         return dao.completeProduction(cookieId);
     }
+<<<<<<< HEAD
     
     public int addCookieProduction(Production production) throws ClassNotFoundException, SQLException, IOException{
         return dao.addProduction(production);
     }
+=======
+>>>>>>> 10c5db2ac9177f958ccd39203289b093f15fe90d
 }

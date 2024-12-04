@@ -16,7 +16,7 @@ public class ControllerIngredient {
     public List<Ingredient> getAll() throws ClassNotFoundException, SQLException, IOException {
         return dao.getAllIngredients();
     }
-
+    // cambio
     public Ingredient updateStock(int id, double quantity) throws SQLException, ClassNotFoundException, IOException {
         return cqrI.updateStock(id, quantity);
     }
