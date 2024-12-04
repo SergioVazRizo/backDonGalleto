@@ -140,6 +140,8 @@ VALUES
 (1, 'preparacion', 100),
 (2, 'horneado', 150);
 
+UPDATE cookies SET status = 'Agotado' WHERE id = 19;
+
 
 SELECT * FROM vw_cookie_details;
 SELECT * FROM cookies WHERE id = 1;
@@ -148,3 +150,4 @@ SELECT * FROM vw_sales_details;
 SELECT * FROM  ingredients;
 SELECT * FROM  recipes;
 SELECT * FROM  production;
+SELECT * FROM  cookies;

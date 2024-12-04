@@ -16,7 +16,7 @@ import java.sql.SQLException;
 public class ConexionMySQL {
         String url = "jdbc:mysql://localhost:3306/don_galleto";
     String user = "root";
-    String password = "root";
+    String password = "Rocha3107";
 
     public Connection abrirConexion() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");
