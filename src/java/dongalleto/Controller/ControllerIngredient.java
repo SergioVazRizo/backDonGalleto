@@ -11,6 +11,7 @@ public class ControllerIngredient {
 
     static DaoIngredient dao = new DaoIngredient();
     static CQRSingredient cqrI = new CQRSingredient();
+    
 
     public List<Ingredient> getAll() throws ClassNotFoundException, SQLException, IOException {
         return dao.getAllIngredients();
@@ -23,4 +24,9 @@ public class ControllerIngredient {
     public Ingredient getIngredientById(int id) throws SQLException, ClassNotFoundException, IOException {
        return dao.getIngredientById(id);
     }
+    public List<Ingredient> getAllRecipesAvailability(int id_recipe) throws ClassNotFoundException, SQLException, IOException {
+        return dao.getIngredientsByRecipeId(id_recipe);
+    }
+    
+    
 }

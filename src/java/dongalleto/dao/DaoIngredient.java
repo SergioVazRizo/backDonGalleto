@@ -109,6 +109,68 @@ public class DaoIngredient {
             connMysql.cerrarConexion(conn);
         }
 
-        return ingredient;  // Retornar el ingrediente actualizado
+        return ingredient; 
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    public List<Ingredient> getIngredientsByRecipeId(int recipeId) throws ClassNotFoundException, SQLException, IOException {
+        List<Ingredient> ingredientsList = new ArrayList<>();
+
+        // Consulta SQL para obtener los detalles de la receta desde la vista
+        String query = "SELECT ingredient_ids, ingredient_quantities, ingredient_stocks, ingredient_names "
+                + "FROM recipe_details WHERE recipe_id = ?;";
+
+        // Conectar a la base de datos
+        ConexionMySQL connMySQL = new ConexionMySQL();
+        Connection conn = connMySQL.abrirConexion();
+
+        // Preparar la consulta
+        PreparedStatement pstmt = conn.prepareStatement(query);
+        pstmt.setInt(1, recipeId);
+        ResultSet rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            // Obtener las cadenas concatenadas
+            String ingredientIdsStr = rs.getString("ingredient_ids");
+            String ingredientQuantitiesStr = rs.getString("ingredient_quantities");
+            String ingredientStocksStr = rs.getString("ingredient_stocks");
+            String ingredientNamesStr = rs.getString("ingredient_names");
+
+            // Procesar los IDs de ingredientes
+            if (ingredientIdsStr != null && !ingredientIdsStr.isEmpty()) {
+                String[] ingredientIdsArray = ingredientIdsStr.split(",");
+                String[] ingredientQuantitiesArray = ingredientQuantitiesStr.split(",");
+                String[] ingredientStocksArray = ingredientStocksStr.split(",");
+                String[] ingredientNamesArray = ingredientNamesStr.split(",");
+
+                for (int i = 0; i < ingredientIdsArray.length; i++) {
+                    Ingredient ingredient = new Ingredient();
+                    ingredient.setId(Integer.parseInt(ingredientIdsArray[i].trim()));
+                    ingredient.setName(ingredientNamesArray[i].trim());
+                    ingredient.setStock(Double.parseDouble(ingredientStocksArray[i].trim()));
+                    // Puedes agregar más propiedades si es necesario
+
+                    ingredientsList.add(ingredient);
+                }
+            }
+        }
+
+        // Cerrar conexiones
+        rs.close();
+        pstmt.close();
+        connMySQL.cerrarConexion(conn);
+
+        return ingredientsList;
+    }
+    
+    
+    
+    
 }

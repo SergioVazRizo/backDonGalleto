@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dongalleto.Controller.ControllerCookie;
 import dongalleto.model.Cookie;
+import dongalleto.modelView.ModelViewCookie;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -19,7 +20,8 @@ import java.util.List;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.PathParam;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -119,12 +121,11 @@ public class RESTCookie {
     public Response updateCookieStatus(@PathParam("id") int id, String requestBody) throws ClassNotFoundException, IOException {
         String status;
 
-        
         try {
             JsonObject jsonObject = new JsonParser().parse(requestBody).getAsJsonObject();
             status = jsonObject.get("status").getAsString();  // Obtener el valor de 'status'
         } catch (Exception e) {
-            
+
             JsonObject errorResponse = new JsonObject();
             errorResponse.addProperty("message", "El estado debe ser 'Existencia' o 'Agotado'.");
             return Response.status(Response.Status.BAD_REQUEST).entity(errorResponse.toString()).build();
@@ -154,6 +155,38 @@ public class RESTCookie {
             String out = "{\"result\":\"Error al actualizar el estado de la cookie: " + ex.getMessage() + "\"}";
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"result\":\"" + out + "\"}").build();
         }
+    }
+
+    @Path("getCookiesPublic")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCookiesPublic() throws SQLException {
+        String out = "";
+        ControllerCookie cookies = new ControllerCookie();
+        List<ModelViewCookie> listaLibros = null;
+        listaLibros = cookies.getAllPublic();
+        Gson objGson = new Gson();
+        out = objGson.toJson(listaLibros);
+        return Response.ok(out).build();
+
+    }
+
+    @Path("getCookiesPublicTodos")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCookiesPublicAll() throws SQLException, ClassNotFoundException {
+        String out = "";
+        try {
+            ControllerCookie cookies = new ControllerCookie();
+            List<ModelViewCookie> listaLibros = null;
+            listaLibros = cookies.getCookiesAll();
+            Gson objGson = new Gson();
+            out = objGson.toJson(listaLibros);
+            return Response.ok(out).build();
+        } catch (IOException ex) {
+            Logger.getLogger(RESTCookie.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Response.ok(out).build();
     }
 
 }

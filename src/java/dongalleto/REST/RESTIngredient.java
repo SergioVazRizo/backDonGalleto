@@ -25,6 +25,7 @@ public class RESTIngredient {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("getAll")
     public Response getIngredients() throws ClassNotFoundException, SQLException, IOException {
         List<Ingredient> ingredients = controller.getAll();
         
@@ -48,7 +49,7 @@ public class RESTIngredient {
         return Response.ok(jsonResponse.toString()).build();
     }
 
-    @Path("/{id}")
+    @Path("{id}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getIngredientById(@PathParam("id") int id) throws ClassNotFoundException, SQLException, IOException {
