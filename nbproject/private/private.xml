@@ -3,19 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/cqrs/CQRScookie.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/Controller/ControllerRecipe.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/ModelViewCookie/ModelViewCookie.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/Controller/ControllerCookie.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/Controller/ControllerIngredient.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/dao/DaoRecipe.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/REST/RESTCookie.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/dao/DaoIngredient.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/model/SaleItem.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/REST/RESTRecipes.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/REST/RESTIngredient.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/dao/DaoCookie.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/model/Sale.java</file>
+            <file>file:/D:/Universidad/7%20Cuatrimestre/Experiencia%20del%20usuario/frontDonGalleto/src/java/dongalleto/model/Ingredient.java</file>
+            <file>file:/D:/Universidad/7%20Cuatrimestre/Experiencia%20del%20usuario/frontDonGalleto/src/java/dongalleto/dao/DaoIngredient.java</file>
+            <file>file:/D:/Universidad/7%20Cuatrimestre/Experiencia%20del%20usuario/frontDonGalleto/src/java/dongalleto/cqrs/CQRSingredient.java</file>
+            <file>file:/D:/Universidad/7%20Cuatrimestre/Experiencia%20del%20usuario/frontDonGalleto/src/java/dongalleto/Controller/ControllerIngredient.java</file>
+            <file>file:/D:/Universidad/7%20Cuatrimestre/Experiencia%20del%20usuario/frontDonGalleto/src/java/dongalleto/REST/RESTCookie.java</file>
+            <file>file:/D:/Universidad/7%20Cuatrimestre/Experiencia%20del%20usuario/frontDonGalleto/src/java/dongalleto/REST/RESTIngredient.java</file>
         </group>
     </open-files>
 </project-private>
