@@ -2,11 +2,7 @@ package dongalleto.REST;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-<<<<<<< HEAD
 import dongalleto.Controller.ControllerProduction;
-=======
-import dongalleto.controller.ControllerProduction;
->>>>>>> 10c5db2ac9177f958ccd39203289b093f15fe90d
 import dongalleto.model.Production;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
@@ -14,7 +10,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.PATCH;
-<<<<<<< HEAD
 import com.google.gson.JsonArray;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.GET;
@@ -71,15 +66,6 @@ public class RESTProduction {
         return Response.ok(jsonResponse.toString()).build();
     }
 
-=======
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PathParam;
-
-@Path("production")
-public class RESTProduction {
-    private final ControllerProduction controller = new ControllerProduction();
-
->>>>>>> 10c5db2ac9177f958ccd39203289b093f15fe90d
     @PATCH
     @Path("cookies/{id}/status")
     @Produces(MediaType.APPLICATION_JSON)
@@ -138,8 +124,8 @@ public class RESTProduction {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorResponse.toString()).build();
         }
     }
-<<<<<<< HEAD
 
+    
     @Path("cookies")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -160,7 +146,7 @@ public class RESTProduction {
             int generatedId = controller.addCookieProduction(newProduction);
 
             // Crear respuesta JSON con el ID y estado inicial
-            JsonObject jsonResponse = new JsonObject();
+            JsonObject jsonResponse = new JsonObject();            
             jsonResponse.addProperty("productionStatus", newProduction.getProductionStatus());
 
             return Response.ok(jsonResponse.toString()).build();
@@ -175,6 +161,3 @@ public class RESTProduction {
     }
 
 }
-=======
-}
->>>>>>> 10c5db2ac9177f958ccd39203289b093f15fe90d
