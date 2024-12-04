@@ -1,25 +1,39 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package dongalleto.model;
 
-/**
- *
- * @author Usuario
- */
 public class SaleItem {
-     private int id;
-    private int quantity;
-    private String saleType;
-    private double total;
+    private int cookieId;  // ID de la galleta
+    private String cookieName;  // Nombre de la galleta
+    private int quantity;  // Cantidad comprada
+    private double pricePerUnit;  // Precio por unidad
+    private double subtotal;  // Subtotal (quantity * pricePerUnit)
+    private String saleType;  // Tipo de venta (UNIT, WEIGHT, PACKAGE_500, PACKAGE_1000, AMOUNT)
 
-    public int getId() {
-        return id;
+    public SaleItem() {
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public SaleItem(int cookieId, String cookieName, int quantity, double pricePerUnit, double subtotal, String saleType) {
+        this.cookieId = cookieId;
+        this.cookieName = cookieName;
+        this.quantity = quantity;
+        this.pricePerUnit = pricePerUnit;
+        this.subtotal = subtotal;
+        this.saleType = saleType;
+    }
+
+    public int getCookieId() {
+        return cookieId;
+    }
+
+    public void setCookieId(int cookieId) {
+        this.cookieId = cookieId;
+    }
+
+    public String getCookieName() {
+        return cookieName;
+    }
+
+    public void setCookieName(String cookieName) {
+        this.cookieName = cookieName;
     }
 
     public int getQuantity() {
@@ -30,6 +44,22 @@ public class SaleItem {
         this.quantity = quantity;
     }
 
+    public double getPricePerUnit() {
+        return pricePerUnit;
+    }
+
+    public void setPricePerUnit(double pricePerUnit) {
+        this.pricePerUnit = pricePerUnit;
+    }
+
+    public double getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(double subtotal) {
+        this.subtotal = subtotal;
+    }
+
     public String getSaleType() {
         return saleType;
     }
@@ -38,11 +68,15 @@ public class SaleItem {
         this.saleType = saleType;
     }
 
-    public double getTotal() {
-        return total;
+    @Override
+    public String toString() {
+        return "SaleItem{" +
+                "cookieId=" + cookieId +
+                ", cookieName='" + cookieName + '\'' +
+                ", quantity=" + quantity +
+                ", pricePerUnit=" + pricePerUnit +
+                ", subtotal=" + subtotal +
+                ", saleType='" + saleType + '\'' +
+                '}';
     }
-
-    public void setTotal(double total) {
-        this.total = total;
-    }        
 }
