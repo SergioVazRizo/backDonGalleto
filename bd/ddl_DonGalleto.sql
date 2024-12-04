@@ -74,3 +74,6 @@ CREATE TABLE sale_items (
     FOREIGN KEY (sale_id) REFERENCES sales (id),
     FOREIGN KEY (cookie_id) REFERENCES cookies (id)
 );
+
+ALTER TABLE sales ADD COLUMN status VARCHAR(50);
+

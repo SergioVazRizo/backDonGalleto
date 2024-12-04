@@ -1,5 +1,6 @@
 package dongalleto.dao;
 
+import com.google.gson.JsonObject;
 import dongalleto.bd.ConexionMySQL;
 import dongalleto.model.Sale;
 import dongalleto.model.SaleItem;
@@ -126,141 +127,138 @@ public class DaoSale {
         }
     }
 
-    public SaleItem validateSale(int cookieId, int quantity, String saleType) throws SQLException, ClassNotFoundException, IOException {
+    public JsonObject validateSale(int cookieId, int quantity, String saleType) throws SQLException, ClassNotFoundException, IOException {
         // Conectar a la base de datos
         ConexionMySQL connMySQL = new ConexionMySQL();
         Connection conn = connMySQL.abrirConexion();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
-        // Consulta para obtener el stock y el precio de la galleta
-        String query = "SELECT stock, unit_price, weight_per_unit, package_500g_price, package_1000g_price FROM cookies WHERE id = ?";
-        PreparedStatement pstmt = conn.prepareStatement(query);
-        pstmt.setInt(1, cookieId);
-
-        // Ejecutar la consulta
-        ResultSet rs = pstmt.executeQuery();
-
-        // Validar si la galleta existe
-        if (!rs.next()) {
-            rs.close();
-            pstmt.close();
-            connMySQL.cerrarConexion(conn);
-            throw new SQLException("Cookie not found.");
-        }
-
-        // Obtener los detalles de la galleta
-        double stock = rs.getDouble("stock");
-        double unitPrice = rs.getDouble("unit_price");
-        double weightPerUnit = rs.getDouble("weight_per_unit");
-        double package500Price = rs.getDouble("package_500g_price");
-        double package1000Price = rs.getDouble("package_1000g_price");
-
-        // Variables de cantidad y precio total
-        double total = 0;
-        boolean isValid = false;
-        String message = "Sale is valid.";
-        int actualQuantity = quantity;
-
-        // Lógica de validación según el tipo de venta
-        switch (saleType) {
-            case "UNIT":
-                // Validar si hay suficiente stock en unidades
-                if (quantity <= stock) {
-                    total = unitPrice * quantity;
-                    isValid = true;
-                } else {
-                    message = "Not enough stock for unit sale.";
-                    isValid = false;
-                    actualQuantity = (int) stock;  // Ajustar la cantidad disponible
-                }
-                break;
-
-            case "WEIGHT":
-                // Validar si hay suficiente stock en peso
-                if (quantity <= stock * weightPerUnit) {
-                    total = unitPrice * quantity;  // Calcula precio por peso
-                    isValid = true;
-                } else {
-                    message = "Not enough stock for weight sale.";
-                    isValid = false;
-                    actualQuantity = (int) (stock * weightPerUnit);  // Ajustar la cantidad disponible
-                }
-                break;
-
-            case "PACKAGE_500":
-                // Validar si hay suficiente stock en paquetes de 500g
-                if (quantity <= stock / 0.5) {
-                    total = package500Price * quantity;  // Calcula precio por paquete de 500g
-                    isValid = true;
-                } else {
-                    message = "Not enough stock for 500g package sale.";
-                    isValid = false;
-                    actualQuantity = (int) (stock / 0.5);  // Ajustar la cantidad disponible
-                }
-                break;
-
-            case "PACKAGE_1000":
-                // Validar si hay suficiente stock en paquetes de 1000g
-                if (quantity <= stock / 1.0) {
-                    total = package1000Price * quantity;  // Calcula precio por paquete de 1000g
-                    isValid = true;
-                } else {
-                    message = "Not enough stock for 1000g package sale.";
-                    isValid = false;
-                    actualQuantity = (int) (stock / 1.0);  // Ajustar la cantidad disponible
-                }
-                break;
-
-            case "AMOUNT":
-                // Si es por cantidad, no validamos stock, solo calculamos el total
-                total = unitPrice * quantity;
-                isValid = true;
-                break;
-
-            default:
-                message = "Invalid sale type.";
-                isValid = false;
-                break;
-        }
-
-        // Crear el objeto SaleItem con la validación
-        SaleItem saleItem = new SaleItem();
-        saleItem.setCookieId(cookieId);
-        saleItem.setQuantity(actualQuantity);
-        saleItem.setSaleType(saleType);
-        saleItem.setSubtotal(total);
-        saleItem.setCookieName("Cookie name");  // Asumiendo que tienes el nombre de la cookie disponible
-
-        // Cerrar conexiones
-        rs.close();
-        pstmt.close();
-        connMySQL.cerrarConexion(conn);
-
-        // Devolver el objeto SaleItem con los resultados
-        return saleItem;
-    }
-
-    public static void main(String[] args) {
-        DaoSale daoSale = new DaoSale();
-
-        // Definir los parámetros de la venta para la validación
-        int cookieId = 1; // ID de la galleta (ajusta según el ID real)
-        int quantity = 10; // Cantidad solicitada
-        String saleType = "UNIT"; // Tipo de venta (puede ser "UNIT", "WEIGHT", "PACKAGE_500", "PACKAGE_1000", "AMOUNT")
+        // Crear el objeto de respuesta
+        JsonObject response = new JsonObject();
 
         try {
-            // Validar la venta
-            SaleItem saleItem = daoSale.validateSale(cookieId, quantity, saleType);
+            // Consultar el stock disponible de la galleta
+            String query = "SELECT stock, unit_price, weight_per_unit, package_500g_price, package_1000g_price FROM cookies WHERE id = ?";
+            pstmt = conn.prepareStatement(query);
+            pstmt.setInt(1, cookieId);
+            rs = pstmt.executeQuery();
 
-            // Mostrar los resultados de la validación
-            System.out.println("Sale Item Validated:");
-            System.out.println("Cookie ID: " + saleItem.getCookieId());
-            System.out.println("Quantity: " + saleItem.getQuantity());
-            System.out.println("Sale Type: " + saleItem.getSaleType());
-            System.out.println("Subtotal: " + saleItem.getSubtotal());
-            System.out.println("Message: " + (saleItem.getQuantity() == quantity ? "Sale is valid" : "Sale is not valid"));
-        } catch (SQLException | ClassNotFoundException | IOException e) {
-            // Manejar excepciones
-            System.err.println("Error during sale validation: " + e.getMessage());
+            if (rs.next()) {
+                double stock = rs.getDouble("stock");
+                double pricePerUnit = rs.getDouble("unit_price");
+                double weightPerUnit = rs.getDouble("weight_per_unit");
+                double package500gPrice = rs.getDouble("package_500g_price");
+                double package1000gPrice = rs.getDouble("package_1000g_price");
+
+                // Determinar el tipo de venta y validar la cantidad
+                double totalAmount = 0;
+                boolean isValid = true;
+                String message = "Venta válida";
+
+                switch (saleType) {
+                    case "UNIT":
+                        if (quantity > stock) {
+                            isValid = false;
+                            message = "Stock insuficiente para la venta";
+                        }
+                        totalAmount = quantity * pricePerUnit;
+                        break;
+                    case "WEIGHT":
+                        if (quantity > stock * weightPerUnit) {
+                            isValid = false;
+                            message = "Stock insuficiente para la venta";
+                        }
+                        totalAmount = quantity * pricePerUnit;  // Supongamos que el precio por unidad es el mismo
+                        break;
+                    case "PACKAGE_500":
+                        if (quantity > stock * 500) {
+                            isValid = false;
+                            message = "Stock insuficiente para la venta";
+                        }
+                        totalAmount = quantity * package500gPrice;
+                        break;
+                    case "PACKAGE_1000":
+                        if (quantity > stock * 1000) {
+                            isValid = false;
+                            message = "Stock insuficiente para la venta";
+                        }
+                        totalAmount = quantity * package1000gPrice;
+                        break;
+                    case "AMOUNT":
+                        // Aquí necesitarías calcular según el monto de venta
+                        break;
+                    default:
+                        isValid = false;
+                        message = "Tipo de venta no válido";
+                        break;
+                }
+
+                // Preparar la respuesta
+                response.addProperty("isValid", isValid);
+                response.addProperty("message", message);
+                response.addProperty("actualQuantity", stock);
+                response.addProperty("total", totalAmount);
+
+            } else {
+                response.addProperty("isValid", false);
+                response.addProperty("message", "Galleta no encontrada");
+            }
+        } finally {
+            // Cerrar conexiones
+            if (rs != null) {
+                rs.close();
+            }
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            connMySQL.cerrarConexion(conn);
         }
+
+        return response;
     }
+
+    
+    
+    
+    
+    
+    
+    
+    public boolean cancelSale(int saleId) throws SQLException, ClassNotFoundException, IOException {
+    // Conectar a la base de datos
+    ConexionMySQL connMySQL = new ConexionMySQL();
+    Connection conn = connMySQL.abrirConexion();
+    PreparedStatement pstmt = null;
+
+    try {
+        // Comenzar la transacción
+        conn.setAutoCommit(false);
+
+        // Actualizar el estado de la venta para marcarla como cancelada
+        String updateSaleQuery = "UPDATE sales SET status = 'CANCELLED' WHERE id = ?";
+        pstmt = conn.prepareStatement(updateSaleQuery);
+        pstmt.setInt(1, saleId);
+        int rowsAffected = pstmt.executeUpdate();
+
+        // Confirmar la transacción
+        conn.commit();
+
+        return rowsAffected > 0;  // Retorna true si la venta fue cancelada
+
+    } catch (SQLException ex) {
+        if (conn != null) {
+            conn.rollback();  // Revertir la transacción en caso de error
+        }
+        throw new SQLException("Error al cancelar la venta: " + ex.getMessage());
+    } finally {
+        // Cerrar conexiones
+        if (pstmt != null) {
+            pstmt.close();
+        }
+        connMySQL.cerrarConexion(conn);
+    }
+}
+
+
 }

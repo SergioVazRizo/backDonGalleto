@@ -10,9 +10,11 @@ import dongalleto.Controller.ControllerSale;
 import dongalleto.model.Sale;
 import dongalleto.model.SaleItem;
 import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
@@ -156,21 +158,50 @@ public class RESTSale {
     @GET
     @Path("validate")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response validateSale(@QueryParam("cookieId") int cookieId,
+    public Response validateSale(
+            @QueryParam("cookieId") int cookieId,
             @QueryParam("quantity") int quantity,
             @QueryParam("saleType") String saleType) {
+
         ControllerSale controller = new ControllerSale();
         try {
-            // Validar la venta utilizando el controlador
+            // Validar la venta con los parámetros recibidos
             JsonObject validationResult = controller.validateSale(cookieId, quantity, saleType);
 
-            // La respuesta de validación es un JSON que contiene si es válida, el mensaje, cantidad actual y total
+            // Devolver la respuesta con el resultado de la validación
             return Response.ok(validationResult.toString()).build();
-
-        } catch (Exception e) {
-            // En caso de error, retornamos un mensaje de error
+        } catch (SQLException | ClassNotFoundException | IOException e) {
+            // En caso de error, devolver una respuesta con estado 500
             JsonObject errorResponse = new JsonObject();
             errorResponse.addProperty("message", "Error al validar la venta: " + e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorResponse.toString()).build();
+        }
+    }
+
+    @DELETE
+    @Path("/sales/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response cancelSale(@PathParam("id") int saleId) {
+        ControllerSale controller = new ControllerSale();
+        try {
+            // Llamar al controlador para cancelar la venta
+            boolean success = controller.cancelSale(saleId);
+
+            // Preparar la respuesta
+            JsonObject response = new JsonObject();
+            if (success) {
+                response.addProperty("success", true);
+                response.addProperty("message", "Venta cancelada exitosamente");
+                return Response.status(Response.Status.OK).entity(response.toString()).build();
+            } else {
+                response.addProperty("success", false);
+                response.addProperty("message", "La venta no se encontró o ya fue cancelada");
+                return Response.status(Response.Status.NOT_FOUND).entity(response.toString()).build();
+            }
+        } catch (SQLException | ClassNotFoundException | IOException e) {
+            JsonObject errorResponse = new JsonObject();
+            errorResponse.addProperty("success", false);
+            errorResponse.addProperty("message", "Error al cancelar la venta: " + e.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorResponse.toString()).build();
         }
     }

@@ -27,32 +27,13 @@ public class ControllerSale {
         return cqrss.createSale(sale);
     }
     
-      public JsonObject validateSale(int cookieId, int quantity, String saleType) throws SQLException, ClassNotFoundException, IOException {
-        // Obtener la venta validada
-        SaleItem saleItem = ds.validateSale(cookieId, quantity, saleType);
-        
-        // Crear el JsonObject para la respuesta
-        JsonObject validationResult = new JsonObject();
-        
-        // Agregar la información de la validación
-        validationResult.addProperty("isValid", saleItem != null); // Si se encuentra el SaleItem, es válida
-        validationResult.addProperty("message", saleItem != null ? "Venta válida" : "Venta no válida");
-        validationResult.addProperty("actualQuantity", saleItem != null ? saleItem.getQuantity() : 0);
-        validationResult.addProperty("total", saleItem != null ? saleItem.getSubtotal() : 0);
-        
-        // Agregar detalles del SaleItem (si la venta es válida)
-        if (saleItem != null) {
-            JsonObject itemJson = new JsonObject();
-            itemJson.addProperty("cookieId", saleItem.getCookieId());
-            itemJson.addProperty("cookieName", saleItem.getCookieName()); // Suponiendo que lo tienes en el SaleItem
-            itemJson.addProperty("quantity", saleItem.getQuantity());
-            itemJson.addProperty("pricePerUnit", saleItem.getPricePerUnit()); // Suponiendo que lo tienes en el SaleItem
-            itemJson.addProperty("subtotal", saleItem.getSubtotal());
-
-            validationResult.add("item", itemJson);
-        }
-
-        return validationResult;
+     public JsonObject validateSale(int cookieId, int quantity, String saleType) throws SQLException, ClassNotFoundException, IOException {
+        return ds.validateSale(cookieId, quantity, saleType);
     }
+
+     public boolean cancelSale(int saleId) throws SQLException, ClassNotFoundException, IOException {
+    return ds.cancelSale(saleId);  // Llama al método del DAO para cancelar la venta
+}
+
 
 }
