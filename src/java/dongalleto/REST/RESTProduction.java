@@ -13,7 +13,6 @@ import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PathParam;
 
-
 @Path("production")
 public class RESTProduction {
     private final ControllerProduction controller = new ControllerProduction();
