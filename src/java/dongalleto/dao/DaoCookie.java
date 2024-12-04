@@ -63,7 +63,7 @@ public class DaoCookie {
         return cookies;
     }
 
-    public Cookie updateStock(int id, int quantity) throws SQLException, ClassNotFoundException, IOException {
+   public Cookie updateStock(int id, int quantity) throws SQLException, ClassNotFoundException, IOException {
         Cookie cookie = null;
         ConexionMySQL connMysql = new ConexionMySQL();
         String updateQuery = "UPDATE cookies SET stock = stock + ? WHERE id = ? AND (stock + ?) >= 0"; // Aseguramos que no quede negativo.

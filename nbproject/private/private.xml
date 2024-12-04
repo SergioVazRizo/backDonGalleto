@@ -3,14 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/model/Ingredient.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/dao/DaoSale.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/cqrs/CQRSSale.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/model/SaleItem.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/model/Recipes.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/model/Sale.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/Controller/ControllerSale.java</file>
-            <file>file:/C:/Users/Eduardo%20Balderas/Desktop/backDonGalleto/src/java/dongalleto/REST/RESTSale.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/backDonGalleto/src/java/dongalleto/REST/RESTSale.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/backDonGalleto/src/java/dongalleto/dao/DaoCookie.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/backDonGalleto/src/java/dongalleto/bd/ConexionMySQL.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/backDonGalleto/web/index.html</file>
         </group>
     </open-files>
 </project-private>
