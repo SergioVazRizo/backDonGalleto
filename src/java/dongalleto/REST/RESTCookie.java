@@ -160,33 +160,85 @@ public class RESTCookie {
     @Path("getCookiesPublic")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCookiesPublic() throws SQLException {
-        String out = "";
-        ControllerCookie cookies = new ControllerCookie();
-        List<ModelViewCookie> listaLibros = null;
-        listaLibros = cookies.getAllPublic();
-        Gson objGson = new Gson();
-        out = objGson.toJson(listaLibros);
-        return Response.ok(out).build();
+    public Response getCookiesPublic() throws SQLException, ClassNotFoundException {
+        ControllerCookie controller = new ControllerCookie();
+        List<ModelViewCookie> cookies = controller.getAllPublic();
 
+        // Crear el objeto JSON principal
+        JsonObject jsonResponse = new JsonObject();
+        JsonArray cookiesArray = new JsonArray();
+
+        // Iterar sobre las cookies y construir la estructura
+        for (ModelViewCookie cookie : cookies) {
+            JsonObject cookieJson = new JsonObject();
+            cookieJson.addProperty("id", cookie.getId());
+            cookieJson.addProperty("name", cookie.getName());
+            cookieJson.addProperty("recipeId", cookie.getRecipeId());
+            cookieJson.addProperty("description", cookie.getDescription());
+            cookieJson.addProperty("status", cookie.getStatus());
+
+            JsonObject priceJson = new JsonObject();
+            priceJson.addProperty("unit", cookie.getUnitPrice());
+            priceJson.addProperty("package500g", cookie.getPackage500gPrice());
+            priceJson.addProperty("package1000g", cookie.getPackage1000gPrice());
+            priceJson.addProperty("pricePerGram", cookie.getPricePerGram());
+
+            cookieJson.add("price", priceJson);
+
+            cookieJson.addProperty("stock", cookie.getStock());
+            cookieJson.addProperty("weightPerUnit", cookie.getWeightPerUnit());
+
+            // Agregar la cookie al array
+            cookiesArray.add(cookieJson);
+        }
+
+        // Agregar el array al objeto principal
+        jsonResponse.add("cookies", cookiesArray);
+
+        // Retornar la respuesta
+        return Response.ok(jsonResponse.toString()).build();
     }
 
     @Path("getCookiesPublicTodos")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCookiesPublicAll() throws SQLException, ClassNotFoundException {
-        String out = "";
-        try {
-            ControllerCookie cookies = new ControllerCookie();
-            List<ModelViewCookie> listaLibros = null;
-            listaLibros = cookies.getCookiesAll();
-            Gson objGson = new Gson();
-            out = objGson.toJson(listaLibros);
-            return Response.ok(out).build();
-        } catch (IOException ex) {
-            Logger.getLogger(RESTCookie.class.getName()).log(Level.SEVERE, null, ex);
+    public Response getCookiesPublicAll() throws SQLException, ClassNotFoundException, IOException {
+        ControllerCookie controller = new ControllerCookie();
+        List<ModelViewCookie> cookies = controller.getCookiesAll();
+
+        // Crear el objeto JSON principal
+        JsonObject jsonResponse = new JsonObject();
+        JsonArray cookiesArray = new JsonArray();
+
+        // Iterar sobre las cookies y construir la estructura
+        for (ModelViewCookie cookie : cookies) {
+            JsonObject cookieJson = new JsonObject();
+            cookieJson.addProperty("id", cookie.getId());
+            cookieJson.addProperty("name", cookie.getName());
+            cookieJson.addProperty("recipeId", cookie.getRecipeId());
+            cookieJson.addProperty("description", cookie.getDescription());
+            cookieJson.addProperty("status", cookie.getStatus());
+
+            JsonObject priceJson = new JsonObject();
+            priceJson.addProperty("unit", cookie.getUnitPrice());
+            priceJson.addProperty("package500g", cookie.getPackage500gPrice());
+            priceJson.addProperty("package1000g", cookie.getPackage1000gPrice());
+            priceJson.addProperty("pricePerGram", cookie.getPricePerGram());
+
+            cookieJson.add("price", priceJson);
+
+            cookieJson.addProperty("stock", cookie.getStock());
+            cookieJson.addProperty("weightPerUnit", cookie.getWeightPerUnit());
+
+            // Agregar la cookie al array
+            cookiesArray.add(cookieJson);
         }
-        return Response.ok(out).build();
+
+        // Agregar el array al objeto principal
+        jsonResponse.add("cookies", cookiesArray);
+
+        // Retornar la respuesta
+        return Response.ok(jsonResponse.toString()).build();
     }
 
 }

@@ -13,20 +13,17 @@ import java.util.List;
 
 public class CookieExternoAppService {
 
-    /*private static final List<String> EXTERNAL_API_URLS = Arrays.asList(
-        "http://10.16.1.74:8080/SistemaGestionArq/api/libro/getAllLibrosPublic", // Sergio
-        "http://10.16.20.5:8080/biblioteca/api/libro/getAllLibrosPublico", // Cortez
-        "http://10.16.18.48:8080/UniversidadIbero/api/libro/getAllLibrosPublico", // Hector
-        "http://10.16.20.101:3000/api/book/publicBooks" //alexis
+    private static final List<String> EXTERNAL_API_URLS = Arrays.asList(
+        "http://10.16.1.74:8080/SistemaGestionArq/api/libro/getAllLibrosPublic" // Sergio
     );
-     */
-    List<String> url;
+     
+    
 
     // Method to fetch books from all external URLs
     public List<ModelViewCookie> getAllLibrosExtern() {
         List<ModelViewCookie> allExternalBooks = new ArrayList<>();
 
-        for (String apiUrl : url) {
+        for (String apiUrl : EXTERNAL_API_URLS) {
             List<ModelViewCookie> cokkieFromApi = fetchCookieFromApi(apiUrl);
             allExternalBooks.addAll(cokkieFromApi);
         }
