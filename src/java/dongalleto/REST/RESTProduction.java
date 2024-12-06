@@ -31,24 +31,21 @@ public class RESTProduction {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProductionStatus() throws ClassNotFoundException, SQLException, IOException {
 
-        // Obtener todas las producciones
         List<Production> allProductions = controller.getAllProductions();
 
-        // Agrupar las producciones por estado
         Map<String, List<Production>> groupedProductions = new HashMap<>();
+
         for (Production production : allProductions) {
             String status = production.getProductionStatus();
             groupedProductions.putIfAbsent(status, new ArrayList<>());
             groupedProductions.get(status).add(production);
         }
 
-        // Crear el objeto JSON de respuesta
         JsonObject jsonResponse = new JsonObject();
         for (Map.Entry<String, List<Production>> entry : groupedProductions.entrySet()) {
             String status = entry.getKey();
             List<Production> productions = entry.getValue();
 
-            // Crear un array JSON para las producciones de este estado
             JsonArray productionArray = new JsonArray();
             for (Production production : productions) {
                 JsonObject productionJson = new JsonObject();
@@ -58,11 +55,9 @@ public class RESTProduction {
                 productionArray.add(productionJson);
             }
 
-            // Agregar el array JSON al objeto principal bajo la clave del estado
             jsonResponse.add(status, productionArray);
         }
 
-        // Retornar la respuesta
         return Response.ok(jsonResponse.toString()).build();
     }
 
@@ -70,23 +65,19 @@ public class RESTProduction {
     @Path("cookies/{id}/status")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateProductionStatus(@PathParam("id") int cookieId, String requestBody) {
+    public Response updateProductionStatus(@PathParam("id") int productionId, String requestBody) {
         try {
-            // Parsear el JSON de entrada
             JsonParser parser = new JsonParser();
             JsonObject jsonObject = parser.parse(requestBody).getAsJsonObject();
             String newStatus = jsonObject.get("newStatus").getAsString();
 
-            // Actualizar el estado
-            Production updatedProduction = controller.updateProductionStatus(cookieId, newStatus);
+            Production updatedProduction = controller.updateProductionStatus(productionId, newStatus);
 
             if (updatedProduction != null) {
-                // Preparar la respuesta
                 JsonObject responseJson = new JsonObject();
                 responseJson.addProperty("productionStatus", updatedProduction.getProductionStatus());
                 return Response.ok(responseJson.toString()).build();
             } else {
-                // Si no se encontró la producción
                 JsonObject errorResponse = new JsonObject();
                 errorResponse.addProperty("message", "Producción no encontrada");
                 return Response.status(Response.Status.NOT_FOUND).entity(errorResponse.toString()).build();
@@ -125,28 +116,24 @@ public class RESTProduction {
         }
     }
 
-    
     @Path("cookies")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addCookieToProduction(String requestBody) {
         try {
-            // Parsear el cuerpo de la solicitud JSON
+
             JsonObject jsonRequest = new com.google.gson.JsonParser().parse(requestBody).getAsJsonObject();
             int cookieId = jsonRequest.get("cookieId").getAsInt();
 
-            // Crear una nueva producción con estado inicial
             Production newProduction = new Production();
             newProduction.setCookieId(cookieId);
-            newProduction.setProductionStatus("preparacion"); // Estado inicial
-            newProduction.setUnitsProduced(0); // Unidades iniciales
+            newProduction.setProductionStatus("preparacion");
+            newProduction.setUnitsProduced(0);
 
-            // Insertar en la base de datos y obtener el ID generado            
             int generatedId = controller.addCookieProduction(newProduction);
 
-            // Crear respuesta JSON con el ID y estado inicial
-            JsonObject jsonResponse = new JsonObject();            
+            JsonObject jsonResponse = new JsonObject();
             jsonResponse.addProperty("productionStatus", newProduction.getProductionStatus());
 
             return Response.ok(jsonResponse.toString()).build();
