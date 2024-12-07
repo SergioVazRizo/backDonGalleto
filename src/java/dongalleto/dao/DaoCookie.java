@@ -63,54 +63,48 @@ public class DaoCookie {
         return cookies;
     }
 
-   public Cookie updateStock(int id, int quantity) throws SQLException, ClassNotFoundException, IOException {
+    public Cookie updateStock(int id, int quantity) throws SQLException, ClassNotFoundException, IOException {
         Cookie cookie = null;
         ConexionMySQL connMysql = new ConexionMySQL();
-        String updateQuery = "UPDATE cookies SET stock = stock + ? WHERE id = ? AND (stock + ?) >= 0"; // Aseguramos que no quede negativo.
-        String selectQuery = "SELECT * FROM cookies WHERE id = ?";
+        String selectStockQuery = "SELECT stock FROM cookies WHERE id = ?";
+        String updateQuery = "UPDATE cookies SET stock = stock + ? WHERE id = ?";
         Connection conn = connMysql.abrirConexion();
 
         try {
             conn.setAutoCommit(false);
+
+            // Verificar el stock actual
+            PreparedStatement selectStockStmt = conn.prepareStatement(selectStockQuery);
+            selectStockStmt.setInt(1, id);
+            ResultSet stockRs = selectStockStmt.executeQuery();
+
+            if (!stockRs.next()) {
+                throw new SQLException("La cookie con el ID especificado no existe.");
+            }
+
+            int currentStock = stockRs.getInt("stock");
+            stockRs.close();
+            selectStockStmt.close();
+
+            // Calcular el nuevo stock
+            int newStock = currentStock + quantity;
+            if (newStock < 0) {
+                throw new SQLException("Stock insuficiente. Faltan " + Math.abs(newStock) + " galletas.");
+            }
+
+            // Actualizar el stock
             PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
             updateStmt.setInt(1, quantity);
             updateStmt.setInt(2, id);
-            updateStmt.setInt(3, quantity); // Verificación para evitar stock negativo
             int rowsUpdated = updateStmt.executeUpdate();
             updateStmt.close();
 
             if (rowsUpdated == 0) {
-                throw new SQLException("No se pudo actualizar el stock. Puede que la cookie no exista o el stock sea insuficiente.");
+                throw new SQLException("No se pudo actualizar el stock.");
             }
 
-            // Consultar la cookie actualizada
-            PreparedStatement selectStmt = conn.prepareStatement(selectQuery);
-            selectStmt.setInt(1, id);
-            ResultSet rs = selectStmt.executeQuery();
-
-            if (rs.next()) {
-                cookie = new Cookie();
-                cookie.setId(rs.getInt("id"));
-                cookie.setName(rs.getString("name"));
-                cookie.setRecipeId(rs.getInt("recipe_id"));
-                cookie.setDescription(rs.getString("description"));
-                cookie.setStatus(rs.getString("status"));
-                cookie.setUnitPrice(rs.getDouble("unit_price"));
-                cookie.setPackage500gPrice(rs.getDouble("package_500g_price"));
-                cookie.setPackage1000gPrice(rs.getDouble("package_1000g_price"));
-                cookie.setPricePerGram(rs.getDouble("price_per_gram"));
-                cookie.setStock(rs.getInt("stock"));
-                cookie.setWeightPerUnit(rs.getDouble("weight_per_unit"));
-
-                // Verificar si el stock es 0 y actualizar el estado
-                if (cookie.getStock() == 0) {
-                    updateStatus(id, "Agotado");
-                    cookie.setStatus("Agotado"); // Actualiza el objeto cookie en memoria también
-                }
-            }
-            rs.close();
-            selectStmt.close();
-
+            // Obtener la cookie actualizada
+            cookie = getCookieById(id, conn);
             conn.commit();
         } catch (Exception e) {
             conn.rollback();
@@ -120,6 +114,32 @@ public class DaoCookie {
             connMysql.cerrarConexion(conn);
         }
 
+        return cookie;
+    }
+
+    private Cookie getCookieById(int id, Connection conn) throws SQLException {
+        String selectQuery = "SELECT * FROM cookies WHERE id = ?";
+        PreparedStatement selectStmt = conn.prepareStatement(selectQuery);
+        selectStmt.setInt(1, id);
+        ResultSet rs = selectStmt.executeQuery();
+
+        Cookie cookie = null;
+        if (rs.next()) {
+            cookie = new Cookie();
+            cookie.setId(rs.getInt("id"));
+            cookie.setName(rs.getString("name"));
+            cookie.setRecipeId(rs.getInt("recipe_id"));
+            cookie.setDescription(rs.getString("description"));
+            cookie.setStatus(rs.getString("status"));
+            cookie.setUnitPrice(rs.getDouble("unit_price"));
+            cookie.setPackage500gPrice(rs.getDouble("package_500g_price"));
+            cookie.setPackage1000gPrice(rs.getDouble("package_1000g_price"));
+            cookie.setPricePerGram(rs.getDouble("price_per_gram"));
+            cookie.setStock(rs.getInt("stock"));
+            cookie.setWeightPerUnit(rs.getDouble("weight_per_unit"));
+        }
+        rs.close();
+        selectStmt.close();
         return cookie;
     }
 

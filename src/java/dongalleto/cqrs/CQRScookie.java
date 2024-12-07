@@ -14,12 +14,13 @@ public class CQRScookie {
     static DaoCookie daoCookie = new DaoCookie();
 
     public Cookie updateStock(int id, int quantity) throws SQLException, ClassNotFoundException, IOException {
-        String validacion = validarCookie(id, quantity);
-        if (!validacion.equals("Todo correcto insercion exitosa")) {
-            return null;  // Si no es válido, retornamos null
-        }
-        return daoCookie.updateStock(id, quantity);  // Devuelve la cookie actualizada
+    String validacion = validarCookie(id, quantity);
+    if (!validacion.equals("Todo correcto insercion exitosa")) {
+        throw new IllegalArgumentException(validacion); // Lanza una excepción con el mensaje de validación
     }
+    return daoCookie.updateStock(id, quantity);
+}
+
 
     public String validarCookie(int id, int quantity) {
     if (id <= 0) {

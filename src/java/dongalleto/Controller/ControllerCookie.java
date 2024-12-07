@@ -27,7 +27,11 @@ public class ControllerCookie {
     }
 
     public Cookie updateStock(int id, int quantity) throws SQLException, ClassNotFoundException, IOException {
-        return cqrC.updateStock(id, quantity);
+        try {
+            return cqrC.updateStock(id, quantity);
+        } catch (IllegalArgumentException e) {
+            throw new SQLException(e.getMessage()); // Transformamos el mensaje para que sea manejado correctamente
+        }
     }
 
     public Cookie updateStatus(int id, String status) throws SQLException, ClassNotFoundException, IOException {

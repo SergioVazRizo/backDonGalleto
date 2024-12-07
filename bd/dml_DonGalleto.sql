@@ -69,16 +69,16 @@ INSERT INTO recipes (id, name, yield, instructions) VALUES
 
 
 INSERT INTO cookies (name, recipe_id, description, status, stock, weight_per_unit, unit_price, package_500g_price, package_1000g_price, price_per_gram) VALUES
-('Galleta Clásica Don Galleto', 1, 'Galleta clásica de mantequilla', 'Existencia', 1000, 35, 8.00, 230.00, 460.00, 0.023),
-('Galleta de Chocolate Don Galleto', 2, 'Con trozos de chocolate oscuro', 'Existencia', 800, 37, 9.00, 240.00, 480.00, 0.025),
-('Galleta Sorpresa Nuez Don Galleto', 3, 'Con trozos de nuez tostada', 'Existencia', 750, 35, 8.50, 235.00, 470.00, 0.024),
-('Galleta de Avena y Miel', 4, 'Hechas con avena integral y miel', 'Existencia', 900, 36, 8.20, 233.00, 466.00, 0.024),
-('Galleta Integral Don Galleto', 5, 'Con ingredientes 100% integrales', 'Existencia', 850, 34, 7.50, 225.00, 450.00, 0.022),
-('Galleta de Almendra', 6, 'Con trozos de almendra crocante', 'Existencia', 700, 35, 9.20, 245.00, 490.00, 0.026),
-('Galleta de Limón', 7, 'Con un toque fresco de limón', 'Existencia', 950, 33, 7.80, 228.00, 456.00, 0.023),
-('Galleta de Coco', 8, 'Con coco rallado natural', 'Existencia', 880, 34, 8.10, 232.00, 464.00, 0.024),
-('Galleta de Frutos Rojos', 9, 'Con arándanos y fresas deshidratadas', 'Existencia', 800, 35, 9.50, 250.00, 500.00, 0.027),
-('Galleta de Menta', 10, 'Con un toque refrescante de menta', 'Existencia', 750, 36, 8.90, 240.00, 480.00, 0.025);
+('Galleta Clásica Don Galleto', 1, 'Galleta clásica de mantequilla', 'Existencia', 1000, 35, 4.00, 230.00, 460.00, 0.23),
+('Galleta de Chocolate Don Galleto', 2, 'Con trozos de chocolate oscuro', 'Existencia', 800, 37, 4.00, 240.00, 480.00, 0.25),
+('Galleta Sorpresa Nuez Don Galleto', 3, 'Con trozos de nuez tostada', 'Existencia', 750, 35, 4.00, 235.00, 470.00, 0.24),
+('Galleta de Avena y Miel', 4, 'Hechas con avena integral y miel', 'Existencia', 900, 36, 4.00, 233.00, 466.00, 0.24),
+('Galleta Integral Don Galleto', 5, 'Con ingredientes 100% integrales', 'Existencia', 850, 34, 4.00, 225.00, 450.00, 0.22),
+('Galleta de Almendra', 6, 'Con trozos de almendra crocante', 'Existencia', 700, 35, 4.00, 245.00, 490.00, 0.26),
+('Galleta de Limón', 7, 'Con un toque fresco de limón', 'Existencia', 950, 33, 4.00, 228.00, 456.00, 0.23),
+('Galleta de Coco', 8, 'Con coco rallado natural', 'Existencia', 880, 34, 4.00, 232.00, 464.00, 0.24),
+('Galleta de Frutos Rojos', 9, 'Con arándanos y fresas deshidratadas', 'Existencia', 800, 35, 4.00, 250.00, 500.00, 0.27),
+('Galleta de Menta', 10, 'Con un toque refrescante de menta', 'Existencia', 750, 36, 4.00, 240.00, 480.00, 0.25);
 
 
 
@@ -140,7 +140,7 @@ VALUES
 (1, 'preparacion', 100),
 (2, 'horneado', 150);
 
-UPDATE cookies SET status = 'Agotado' WHERE id = 19;
+UPDATE ingredients SET stock = 0 WHERE id = 1;
 
 
 SELECT * FROM vw_cookie_details;
@@ -153,3 +153,4 @@ SELECT * FROM  ingredients;
 SELECT * FROM  recipes;
 SELECT * FROM  production;
 SELECT * FROM  cookies;
+
